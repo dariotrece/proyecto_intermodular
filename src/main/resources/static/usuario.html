@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuario</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<h1>Panel Usuario</h1>
+
+<section>
+    <h2>Buscar libro por Título</h2>
+    <input id="nombreLibro" placeholder="Título Libro">
+    <button onclick="buscarLibroTitulo()">Buscar</button>
+    <div id="resultadoBusquedaTitulo"></div>
+</section>
+
+<section>
+    <h2>Valorar libro</h2>
+
+    <input id="tituloValoracion" placeholder="Título del libro">
+
+    <select id="puntuacion">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+
+    <select id="origenLibro">
+        <option value="BIBLIOTECA">Biblioteca</option>
+        <option value="PRIVADO">Libro propio</option>
+    </select>
+
+    <textarea id="comentario"></textarea>
+
+    <button onclick="crearValoracion()">Valorar</button>
+
+</section>
+
+<section>
+    <h2>Mis valoraciones</h2>
+    <div id="listaValoraciones"></div>
+    <button onclick="cargarValoraciones()">Carga tus valoraciones haciendo click</button>
+</section>
+
+<section>
+    <h2>Buscar valoraciones de otros usuarios</h2>
+    <input id="usernameInput" placeholder="Nombre de usuario">
+    <button onclick="buscarUsuario()">Buscar</button>
+    <div id="valoracionesOtroUsuario"></div>
+</section>
+
+
+<script src="app.js"></script>
+</body>
+</html>

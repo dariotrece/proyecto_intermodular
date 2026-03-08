@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Administrador</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="login-area" style="position:absolute; top:10px; right:10px;"></div>
+
+<h1>📚 Biblioteca</h1>
+
+<section>
+    <h2>Crear libro</h2>
+    <input id="isbn" placeholder="ISBN">
+    <input id="titulo" placeholder="Título">
+    <input id="autor" placeholder="Autor">
+    <button onclick="crearLibro()">Guardar</button>
+</section>
+
+
+<section>
+    <h2>Buscar libro por ISBN</h2>
+    <input id="isbnLibro" placeholder="ISBN">
+    <button onclick="buscarLibroISBN()">Buscar</button>
+    <div id="resultadoBusqueda"></div>
+</section>
+
+<section>
+    <h2>Buscar libro por Título</h2>
+    <input id="nombreLibro" placeholder="Título Libro">
+    <button onclick="buscarLibroTitulo()">Buscar</button>
+    <div id="resultadoBusquedaTitulo"></div>
+</section>
+
+<section>
+    <h2>Prestar libro</h2>
+    <input id="prestamoIsbn" placeholder="ISBN">
+    <input id="prestamoUsuario" placeholder="ID Usuario">
+    <button onclick="prestarLibro()">Prestar</button>
+</section>
+
+<section>
+    <h2>Devolver libro</h2>
+    <input id="devolucionIsbn" placeholder="ISBN">
+    <input id="devolucionUsuario" placeholder="ID Usuario">
+    <button onclick="devolverLibro()">Devolver</button>
+</section>
+
+<section>
+    <h2>Libros en sistema</h2>
+    <button onclick="listarLibros()">Actualizar lista</button>
+    <table>
+        <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Estado</th>
+        </tr>
+        </thead>
+        <tbody id="tablaLibros"></tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Usuarios en sistema</h2>
+    <button onclick="listarUsuarios()">Actualizar lista</button>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody id="tablaUsuarios"></tbody>
+    </table>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
