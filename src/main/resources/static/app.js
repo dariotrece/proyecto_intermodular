@@ -1,9 +1,7 @@
 const API_URL = "/libros";
 const USUARIOS_API = "/usuarios";
 
-/* =========================
-   CONTROL DE SESIÓN
-========================= */
+//Control de sesión
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -87,9 +85,7 @@ function mostrarUsuario() {
         });
 }
 
-/* =========================
-   LIBROS
-========================= */
+//Libros
 
 async function crearLibro() {
     const isbn = document.getElementById("isbn").value;
@@ -237,9 +233,7 @@ async function buscarLibroTitulo() {
 }
 
 
-/* =========================
-   PRESTAMOS
-========================= */
+//Prestamos
 
 async function prestarLibro() {
     const isbn = document.getElementById("prestamoIsbn").value;
@@ -320,9 +314,7 @@ async function devolverLibro() {
     }
 }
 
-/* =========================
-   USUARIOS
-========================= */
+//Usuarios
 
 async function listarUsuarios() {
     const response = await fetch(USUARIOS_API);
