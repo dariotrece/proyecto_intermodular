@@ -1,6 +1,6 @@
 package com.darioperez.biblioteca_api.exception;
 
-public class UsuarioNoEncontradoException extends RuntimeException {
+public class UsuarioNoEncontradoException extends BibliotecaException {
 
     public UsuarioNoEncontradoException(Integer id) {
         super("Usuario no encontrado con id: " + id);

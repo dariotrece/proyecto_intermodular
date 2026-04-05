@@ -7,6 +7,7 @@ import com.darioperez.biblioteca_api.model.Prestamo;
 import com.darioperez.biblioteca_api.model.Usuario;
 import com.darioperez.biblioteca_api.repository.LibroRepository;
 import com.darioperez.biblioteca_api.repository.PrestamoRepository;
+import com.darioperez.biblioteca_api.repository.ReservaRepository;
 import com.darioperez.biblioteca_api.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,17 @@ public class BibliotecaService {
     private final LibroRepository libroRepository;
     private final UsuarioRepository usuarioRepository;
     private final PrestamoRepository prestamoRepository;
+    private final ReservaRepository reservaRepository;
+    private final ReservaService reservaService;
 
-    public BibliotecaService(LibroRepository libroRepository, UsuarioRepository usuarioRepository, PrestamoRepository prestamoRepository) {
+    public BibliotecaService(LibroRepository libroRepository, UsuarioRepository usuarioRepository, PrestamoRepository prestamoRepository, ReservaRepository reservaRepository, ReservaService reservaService) {
         this.libroRepository = libroRepository;
         this.usuarioRepository = usuarioRepository;
         this.prestamoRepository = prestamoRepository;
+        this.reservaRepository = reservaRepository;
+        this.reservaService = reservaService;
     }
+
 
     //Crear libro en el catálogo comprobando que no exista previamente. Usa métodos Spring Boot
     public Libro crearLibro(Libro libro) {
@@ -51,9 +57,9 @@ public class BibliotecaService {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new UsuarioNoEncontradoException(usuarioId));
 
-        boolean prestado = prestamoRepository
+        boolean prestado = !prestamoRepository
                 .findByLibroIsbnAndFechaDevolucionIsNull(isbn)
-                .isPresent();
+                .isEmpty();
 
         if (prestado) {
             throw new LibroNoDisponibleException(isbn);
@@ -66,12 +72,22 @@ public class BibliotecaService {
     //Mét0do devolver libro, busca el préstamo activo de ese lubro, si no lo encuentra salta excepción, si lo encuentra le pone fecha de devolución y lo marca como disponible
     public void devolverLibro(String isbn) {
 
-        Prestamo prestamo = prestamoRepository
-                .findByLibroIsbnAndFechaDevolucionIsNull(isbn)
-                .orElseThrow(() -> new DevolucionInvalidaException(isbn));
+        List<Prestamo> prestamosActivos = prestamoRepository
+                .findByLibroIsbnAndFechaDevolucionIsNull(isbn);
 
+        if (prestamosActivos.isEmpty()) {
+            throw new DevolucionInvalidaException(isbn);
+        }
+
+        if (prestamosActivos.size() > 1) {
+            throw new IllegalStateException("Hay más de un préstamo activo para el libro con ISBN: " + isbn);
+        }
+
+        Prestamo prestamo = prestamosActivos.get(0);
         prestamo.setFechaDevolucion(LocalDateTime.now());
         prestamoRepository.save(prestamo);
+
+        reservaService.notificarDevolucion(isbn);
     }
 
     //Devuelve todos los libros
@@ -97,9 +113,10 @@ public class BibliotecaService {
         Libro libro = libroRepository.findById(isbn)
                 .orElseThrow(() -> new LibroNoEncontradoException(isbn));
 
-        boolean prestado = prestamoRepository
+        boolean prestado = !prestamoRepository
                 .findByLibroIsbnAndFechaDevolucionIsNull(isbn)
-                .isPresent();
+                .isEmpty();
+
         return new LibroView(
                 libro.getIsbn(),
                 libro.getTitulo(),
@@ -107,54 +124,47 @@ public class BibliotecaService {
                 !prestado
         );
     }
-    public List<LibroView> buscarLibroTitulo(String titulo) {
 
+    public List<LibroView> buscarLibroTitulo(String titulo) {
         List<Libro> libros = libroRepository.findByTituloContainingIgnoreCase(titulo);
 
         if (libros.isEmpty()) {
             throw new LibroNoEncontradoException(titulo);
         }
 
-        List<LibroView> resultado = new ArrayList<>();
+        return libros.stream()
+                .map(libro -> {
+                    boolean prestado = !prestamoRepository
+                            .findByLibroIsbnAndFechaDevolucionIsNull(libro.getIsbn())
+                            .isEmpty();
 
-        for (Libro libro : libros) {
-
-            boolean prestado = prestamoRepository
-                    .findByLibroIsbnAndFechaDevolucionIsNull(libro.getIsbn())
-                    .isPresent();
-
-            resultado.add(new LibroView(
-                    libro.getIsbn(),
-                    libro.getTitulo(),
-                    libro.getAutor(),
-                    !prestado
-            ));
-        }
-
-        return resultado;
+                    return new LibroView(
+                            libro.getIsbn(),
+                            libro.getTitulo(),
+                            libro.getAutor(),
+                            !prestado
+                    );
+                })
+                .toList();
     }
 
 
 
     public List<LibroView> listarLibrosConEstado() {
+        return libroRepository.findAll().stream()
+                .map(libro -> {
+                    boolean prestado = !prestamoRepository
+                            .findByLibroIsbnAndFechaDevolucionIsNull(libro.getIsbn())
+                            .isEmpty();
 
-        List<Libro> libros = libroRepository.findAll();
-        List<LibroView> resultado = new ArrayList<>();
-
-        for (Libro libro : libros) {
-            boolean prestado = prestamoRepository
-                    .findByLibroIsbnAndFechaDevolucionIsNull(libro.getIsbn())
-                    .isPresent();
-
-            resultado.add(new LibroView(
-                    libro.getIsbn(),
-                    libro.getTitulo(),
-                    libro.getAutor(),
-                    !prestado
-            ));
-        }
-
-        return resultado;
+                    return new LibroView(
+                            libro.getIsbn(),
+                            libro.getTitulo(),
+                            libro.getAutor(),
+                            !prestado
+                    );
+                })
+                .toList();
     }
 
 

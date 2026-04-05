@@ -1,6 +1,7 @@
 package com.darioperez.biblioteca_api.service;
 
-import com.darioperez.biblioteca_api.model.DueñoLibro;
+import com.darioperez.biblioteca_api.dto.TituloRatingStats;
+import com.darioperez.biblioteca_api.model.DuenoLibro;
 import com.darioperez.biblioteca_api.model.Usuario;
 import com.darioperez.biblioteca_api.model.Valoracion;
 import com.darioperez.biblioteca_api.repository.PrestamoRepository;
@@ -9,11 +10,14 @@ import com.darioperez.biblioteca_api.repository.ValoracionRepository;
 import com.darioperez.biblioteca_api.exception.UsuarioNoEncontradoException;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,7 +40,7 @@ public class ValoracionService {
             String titulo,
             int puntuacion,
             String comentario,
-            DueñoLibro dueñoLibro
+            DuenoLibro duenoLibro
     ) {
 
         if (puntuacion < 1 || puntuacion > 5) {
@@ -54,9 +58,9 @@ public class ValoracionService {
                 prestamoRepository.existsByUsuarioIdAndLibroTituloIgnoreCase(
                         usuario.getId(), titulo);
 
-        DueñoLibro dueñoFinal = leidoEnBiblioteca
-                ? DueñoLibro.BIBLIOTECA
-                : DueñoLibro.PRIVADO;
+        DuenoLibro dueñoFinal = leidoEnBiblioteca
+                ? DuenoLibro.BIBLIOTECA
+                : DuenoLibro.PRIVADO;
 
         Valoracion valoracion;
 
@@ -96,5 +100,18 @@ public class ValoracionService {
         valoracionRepository
                 .deleteByUsuarioIdAndTituloIgnoreCase(usuario.getId(), titulo);
     }
+
+    public List <Map<String, Object>> obtenerRankingLibros() {
+        List<Object []> resultados  = valoracionRepository.findTopRatedBooks();
+        return resultados.stream()
+                .limit(10)
+                .map(row -> Map.of(
+                        "titulo", row[0],
+                        "puntuacionMedia", row[1],
+                        "numeroValoraciones", row[2]
+                ))
+                .collect(Collectors.toList());
+    }
+
 
 }

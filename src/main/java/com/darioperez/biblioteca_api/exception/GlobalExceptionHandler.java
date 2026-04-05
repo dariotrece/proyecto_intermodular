@@ -3,8 +3,14 @@ package com.darioperez.biblioteca_api.exception;
 import com.darioperez.biblioteca_api.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.FieldError;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,11 +34,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsuarioInvalidoException.class)
-    public ResponseEntity<ApiResponse> handñerUsuarioInvalido(
+    public ResponseEntity<ApiResponse> handlerUsuarioInvalido(
             UsuarioInvalidoException ex
     ) {
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse(false, ex.getMessage()));
     }
 
@@ -70,5 +76,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse(false, ex.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
+        String mennsaje = ex.getBindingResult().getFieldErrors().stream().map(e -> e.getField() + ": " + e.getDefaultMessage()).collect(Collectors.joining(", "));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(false, mennsaje));
     }
 }

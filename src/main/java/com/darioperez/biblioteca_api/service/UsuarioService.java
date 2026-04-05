@@ -61,10 +61,10 @@ public class UsuarioService implements UserDetailsService {
     public Usuario login(String username, String password) {
 
         Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new UsuarioInvalidoException("Credenciales incorrectas"));
 
         if (!passwordEncoder.matches(password, usuario.getPassword())) {
-            throw new RuntimeException("Contraseña incorrecta");
+            throw new UsuarioInvalidoException("Credenciales incorrectas");
         }
 
         return usuario;

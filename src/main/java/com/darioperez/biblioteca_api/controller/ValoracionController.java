@@ -2,13 +2,13 @@ package com.darioperez.biblioteca_api.controller;
 
 import com.darioperez.biblioteca_api.dto.CrearValoracionRequest;
 import com.darioperez.biblioteca_api.model.Valoracion;
-import com.darioperez.biblioteca_api.model.DueñoLibro;
 import com.darioperez.biblioteca_api.service.ValoracionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/valoraciones")
@@ -70,6 +70,11 @@ public class ValoracionController {
         valoracionService.borrarValoracion(username, titulo);
 
         return ResponseEntity.ok("Valoración eliminada correctamente");
+    }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<Map<String, Object>>> obtenerRanking() {
+        return ResponseEntity.ok(valoracionService.obtenerRankingLibros());
     }
 
 }

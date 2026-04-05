@@ -48,10 +48,37 @@
 </section>
 
 <section>
+    <h2>Mis préstamos</h2>
+    <div style="display:flex; gap:8px; align-items:center;">
+        <button onclick="cargarMisPrestamos(false)">Ver todos</button>
+        <button onclick="cargarMisPrestamos(true)">Solo activos</button>
+    </div>
+    <div id="misPrestamos"></div>
+</section>
+
+<section>
     <h2>Buscar valoraciones de otros usuarios</h2>
     <input id="usernameInput" placeholder="Nombre de usuario">
     <button onclick="buscarUsuario()">Buscar</button>
     <div id="valoracionesOtroUsuario"></div>
+</section>
+
+<section>
+    <h2>Libros mejor valorados</h2>
+    <button onclick="cargarRanking()">Ver ranking</button>
+    <div id="ranking"></div>
+</section>
+
+<section>
+    <h2>Reservar libro</h2>
+    <input id="reservaTitulo" placeholder="Título del libro">
+    <button onclick="crearReserva()">Reservar</button>
+</section>
+
+<section>
+    <h2>Mis reservas</h2>
+    <button onclick="cargarMisReservas()">Ver mis reservas</button>
+    <div id="misReservas"></div>
 </section>
 
 

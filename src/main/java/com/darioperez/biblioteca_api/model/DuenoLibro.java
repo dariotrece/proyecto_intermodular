@@ -1,6 +1,6 @@
 package com.darioperez.biblioteca_api.model;
 
-public enum DueñoLibro {
+public enum DuenoLibro {
     BIBLIOTECA,
     PRIVADO
 }

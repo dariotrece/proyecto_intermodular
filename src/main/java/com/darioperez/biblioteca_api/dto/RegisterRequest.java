@@ -1,10 +1,23 @@
 package com.darioperez.biblioteca_api.dto;
 
 import com.darioperez.biblioteca_api.model.Rol;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class RegisterRequest {
+
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 3, message = "El nombre debe tener al menos 3 caracteres")
     private String nombre;
+
+    @NotBlank(message = "El username es obligatorio")
+    @Size(min = 4, message = "El username debe tener al menos 4 caracteres")
+    @Pattern(regexp = "^\\S+$", message = "El username no puede contener espacios")
     private String username;
+
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     private String password;
 
     public String getNombre() {

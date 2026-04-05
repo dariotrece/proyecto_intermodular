@@ -6,6 +6,7 @@ import com.darioperez.biblioteca_api.dto.DevolverLibroRequest;
 import com.darioperez.biblioteca_api.dto.PrestarLibroRequest;
 import com.darioperez.biblioteca_api.model.Libro;
 import com.darioperez.biblioteca_api.service.BibliotecaService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class LibroController {
 
     @PostMapping
     @PreAuthorize("hasRole('BIBLIOTECARIO')")
-    public ResponseEntity<?> crearLibro(@RequestBody CrearLibroRequest request) {
+    public ResponseEntity<?> crearLibro(@Valid @RequestBody CrearLibroRequest request) {
 
         Libro libro = bibliotecaService.crearLibro(
                 request.getIsbn(),
@@ -40,7 +41,7 @@ public class LibroController {
 
     @PostMapping("/devoluciones")
     @PreAuthorize("hasRole('BIBLIOTECARIO')")
-    public ResponseEntity<?> devolverLibro(@RequestBody DevolverLibroRequest request) {
+    public ResponseEntity<?> devolverLibro(@Valid @RequestBody DevolverLibroRequest request) {
 
         Libro libro = bibliotecaService.devolverLibroUsuario(
                 request.getIsbn(),
@@ -60,7 +61,7 @@ public class LibroController {
 
     @PostMapping("/prestamos")
     @PreAuthorize("hasRole('BIBLIOTECARIO')")
-    public ResponseEntity<?> prestarLibro(@RequestBody PrestarLibroRequest request) {
+    public ResponseEntity<?> prestarLibro(@Valid @RequestBody PrestarLibroRequest request) {
 
         Libro libro = bibliotecaService.prestarLibroUsuario(
                 request.getIsbn(),
@@ -96,6 +97,7 @@ public class LibroController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('BIBLIOTECARIO')")
     public ResponseEntity<?> listarLibros() {
         return ResponseEntity.ok(
                 bibliotecaService.listarLibrosConEstado()

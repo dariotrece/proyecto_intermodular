@@ -21,7 +21,7 @@ public class Valoracion {
     private String comentario;
 
     @Enumerated(EnumType.STRING)
-    private DueñoLibro dueñoLibro;
+    private DuenoLibro duenoLibro;
 
     private LocalDateTime fecha;
 
@@ -65,12 +65,12 @@ public class Valoracion {
         this.comentario = comentario;
     }
 
-    public DueñoLibro getDueñoLibro() {
-        return dueñoLibro;
+    public DuenoLibro getDueñoLibro() {
+        return duenoLibro;
     }
 
-    public void setDueñoLibro(DueñoLibro dueñoLibro) {
-        this.dueñoLibro = dueñoLibro;
+    public void setDueñoLibro(DuenoLibro duenoLibro) {
+        this.duenoLibro = duenoLibro;
     }
 
     public LocalDateTime getFecha() {

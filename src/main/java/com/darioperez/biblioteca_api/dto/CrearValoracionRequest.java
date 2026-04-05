@@ -1,13 +1,20 @@
 package com.darioperez.biblioteca_api.dto;
 
-import com.darioperez.biblioteca_api.model.DueñoLibro;
+import com.darioperez.biblioteca_api.model.DuenoLibro;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 public class CrearValoracionRequest {
 
+    @NotBlank(message = "El título es obligatorio")
     private String titulo;
+
+    @Min(value =1, message = "La puntuación debe ser por lo menos de 1")
+    @Max(value=5, message = "La puntución puede ser 5 como máximo")
     private int puntuacion;
     private String comentario;
-    private DueñoLibro dueñoLibro;
+    private DuenoLibro duenoLibro;
 
     public String getTitulo() {
         return titulo;
@@ -33,12 +40,12 @@ public class CrearValoracionRequest {
         this.comentario = comentario;
     }
 
-    public DueñoLibro getDueñoLibro() {
-        return dueñoLibro;
+    public DuenoLibro getDueñoLibro() {
+        return duenoLibro;
     }
 
-    public void setDueñoLibro(DueñoLibro dueñoLibro) {
-        this.dueñoLibro = dueñoLibro;
+    public void setDueñoLibro(DuenoLibro duenoLibro) {
+        this.duenoLibro = duenoLibro;
     }
 }
 

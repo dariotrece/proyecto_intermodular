@@ -48,22 +48,27 @@ public class AuthController {
         );
     }
 
-    @GetMapping("/me")  //endpoint para poder mostrar/ocultar lo que tenga que ver cada usuario de la aplicación
-    public ResponseEntity<?> me(Authentication authentication)  {//spring inyecta automaticamente
+    @GetMapping("/me")
+    public ResponseEntity<?> me(Authentication authentication) {
 
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"))) {
             return ResponseEntity.status(401).build();
         }
 
         String username = authentication.getName();
 
-        Usuario usuario = usuarioService.buscarPorUsername(username);
+        String rol = authentication.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .map(authority -> authority.substring(5))
+                .findFirst()
+                .orElse("USUARIO");
 
         return ResponseEntity.ok(
-                new UsuarioInfoResponse(
-                        usuario.getUsername(),
-                        usuario.getRol()
-                )
+                new UsuarioInfoResponse(username, Rol.valueOf(rol))
         );
     }
 

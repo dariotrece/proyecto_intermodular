@@ -130,8 +130,19 @@ async function crearLibro() {
 async function listarLibros() {
     const response = await fetch(API_URL);
 
+    if (response.status === 403) {
+        alert("No autorizado: tu sesión no tiene rol de bibliotecario.");
+        return;
+    }
+
+    if (response.status === 401) {
+        alert("No has iniciado sesión.");
+        window.location.href = "/login.html";
+        return;
+    }
+
     if (!response.ok) {
-        alert("No autorizado.");
+        alert("Error al cargar los libros.");
         return;
     }
 
@@ -278,6 +289,7 @@ async function prestarLibro() {
 
 async function devolverLibro() {
     const isbn = document.getElementById("devolucionIsbn").value;
+    const usuarioIdInput = document.getElementById("devolucionUsuario").value().trim();
 
     if (!isbn || !usuarioIdInput) {
         alert("Introduce el ISBN y el ID del usuario");
@@ -480,4 +492,198 @@ async function buscarUsuario() {
             </div>
         `;
     });
+}
+
+async function cargarRanking() {
+    try {
+        const limit = 10;
+        const response = await fetch(`/stats/top-titulos?limit=${limit}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const ranking = await response.json();
+        const contenedor = document.getElementById("ranking");
+
+        if (!ranking || ranking.length === 0) {
+            contenedor.innerHTML = "<p>No hay suficientes valoraciones aún</p>";
+            return;
+        }
+        const html = ranking.map((item, index) => {
+
+            const titulo = item.titulo ?? "(Sin título)";
+            const media = Number(item.media ?? item.puntuacionMedia ?? 0);
+            const total = Number(item.total ?? item.numeroValoraciones ?? 0);
+
+            return `
+                <div class="ranking-item">
+                    <strong>#${index + 1} - ${titulo}</strong>
+                    <p>⭐ ${media.toFixed(1)}/5 (${total} valoraciones)</p>
+                </div>
+            `;
+        }).join("");
+
+        contenedor.innerHTML = html;
+    } catch (error) {
+        alert("Error al cargar el ranking");
+    }
+
+
+}
+
+async function cargarMisPrestamos(soloActivos) {
+    try {
+        const url = `/historial/mio?activos=${soloActivos ? "true" : "false"}&page=0&size=10&sort=fechaPrestamo,desc`;
+        const response = await fetch(url);
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const page = await response.json();
+        const contenedor = document.getElementById("misPrestamos");
+
+        if (!page.content || page.content.length === 0) {
+            contenedor.innerHTML = "<p>No hay préstamos para mostrar.</p>";
+            return;
+        }
+
+        const html = page.content.map(p => {
+            const dev = p.fechaDevolucion ? new Date(p.fechaDevolucion).toLocaleString() : "—";
+            const pre = p.fechaPrestamo ? new Date(p.fechaPrestamo).toLocaleString() : "—";
+            return `
+                <div class="prestamo-item" style="border:1px solid #ccc; padding:10px; margin:8px 0;">
+                    <strong>${p.titulo}</strong>
+                    <div>ISBN: ${p.isbn}</div>
+                    <div>Prestado: ${pre}</div>
+                    <div>Devuelto: ${dev}</div>
+                    <div>Estado: ${p.activo ? "ACTIVO" : "DEVUELTO"}</div>
+                </div>
+            `;
+        }).join("");
+
+        contenedor.innerHTML = html;
+    } catch (e) {
+        console.error(e);
+        alert("Error al cargar mis préstamos");
+    }
+}
+
+async function crearReserva() {
+    const titulo = document.getElementById("reservaTitulo").value.trim();
+
+    if (!titulo) {
+        alert("Introduce un título para reservar");
+        return;
+    }
+
+    const response = await fetch("/reservas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titulo })
+    });
+
+    if (response.ok) {
+        alert("Reserva creada correctamente");
+        document.getElementById("reservaTitulo").value = "";
+        cargarMisReservas();
+    } else {
+        const error = await response.json();
+        alert(error.message || "Error al crear la reserva");
+    }
+}
+
+async function cargarMisReservas() {
+    const response = await fetch("/reservas/mias");
+
+    if (!response.ok) {
+        alert("Error al cargar las reservas");
+        return;
+    }
+
+    const reservas = await response.json();
+    const contenedor = document.getElementById("misReservas");
+    contenedor.innerHTML = "";
+
+    if (reservas.length === 0) {
+        contenedor.innerHTML = "<p>No tienes reservas activas</p>";
+        return;
+    }
+
+    reservas.forEach(r => {
+        const fecha = new Date(r.fechaReserva).toLocaleDateString();
+        const estadoClase = r.estado === "LISTA" ? "disponible" : "prestado";
+
+        contenedor.innerHTML += `
+            <div class="reserva-item">
+                <strong>${r.libro.titulo}</strong>
+                <p>ISBN: ${r.libro.isbn}</p>
+                <p>Fecha reserva: ${fecha}</p>
+                <p>Estado: <span class="${estadoClase}">${r.estado}</span></p>
+                <button onclick="cancelarReserva(${r.id})">Cancelar reserva</button>
+            </div>
+            <hr>
+        `;
+    });
+}
+
+async function cancelarReserva(id) {
+    const response = await fetch(`/reservas/${id}`, {
+        method: "DELETE"
+    });
+
+    if (response.ok) {
+        alert("Reserva cancelada");
+        cargarMisReservas();
+    } else {
+        alert("Error al cancelar la reserva");
+    }
+}
+
+async function cargarTodasReservas() {
+    const response = await fetch("/reservas");
+
+    if (!response.ok) {
+        alert("Error al cargar las reservas");
+        return;
+    }
+
+    const reservas = await response.json();
+    const activas = reservas.filter(r => r.estado !== "CANCELADA"); // añade esta línea
+    const contenedor = document.getElementById("todasReservas");
+    contenedor.innerHTML = "";
+
+    if (activas.length === 0) {
+        contenedor.innerHTML = "<p>No hay reservas activas</p>";
+        return;
+    }
+
+    activas.forEach(r => {  // cambia reservas por activas aquí
+        const fecha = new Date(r.fechaReserva).toLocaleDateString();
+        const estadoClase = r.estado === "LISTA" ? "disponible" : "prestado";
+
+        contenedor.innerHTML += `
+            <div class="reserva-item">
+                <strong>${r.libro.titulo}</strong>
+                <p>Usuario: ${r.usuario.username}</p>
+                <p>ISBN: ${r.libro.isbn}</p>
+                <p>Fecha reserva: ${fecha}</p>
+                <p>Estado: <span class="${estadoClase}">${r.estado}</span></p>
+                <button onclick="cancelarReservaBibliotecario(${r.id})">Cancelar reserva</button>
+            </div>
+            <hr>
+        `;
+    });
+}
+
+async function cancelarReservaBibliotecario(id) {
+    const response = await fetch(`/reservas/admin/${id}`, {
+        method: "DELETE"
+    });
+
+    if (response.ok) {
+        alert("Reserva cancelada");
+        cargarTodasReservas();
+    } else {
+        alert("Error al cancelar la reserva");
+    }
 }
