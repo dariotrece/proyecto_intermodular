@@ -6,7 +6,6 @@ import com.darioperez.biblioteca_api.dto.RegisterRequest;
 import com.darioperez.biblioteca_api.dto.UsuarioInfoResponse;
 import com.darioperez.biblioteca_api.model.Rol;
 import com.darioperez.biblioteca_api.model.Usuario;
-//import com.darioperez.biblioteca_api.security.JwtService;
 import com.darioperez.biblioteca_api.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,11 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UsuarioService usuarioService;
-    //private final JwtService jwtService;
 
     public AuthController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
-        //this.jwtService = jwtService;
     }
 
     @PostMapping("/register") //Endpoint para registrar usuario
@@ -41,8 +38,7 @@ public class AuthController {
                 request.getUsername(),
                 request.getPassword()
         );
-        
-        //String token = jwtService.generarToken(usuario); //En caso de login correcto, te genera un token que te identifica para tu uso de la app
+
         return ResponseEntity.ok(
                 new LoginResponse(usuario.getUsername(), usuario.getRol())
         );

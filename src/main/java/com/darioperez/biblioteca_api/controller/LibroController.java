@@ -78,13 +78,6 @@ public class LibroController {
                         "' prestado correctamente"
         ));
     }
-    /*
-    @GetMapping
-    public ResponseEntity<?> listarLibrosAPI() {
-        return ResponseEntity.ok(bibliotecaService.listarLibros());
-    }
-
-     */
 
     @GetMapping("/titulo/{titulo}")
     public ResponseEntity<?> buscarLibroTitulo(@PathVariable String titulo) {

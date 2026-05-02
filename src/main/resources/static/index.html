@@ -2,17 +2,35 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Biblioteca API - Interfaz</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="page-home">
 
-<div id="login-area" style="position:absolute; top:10px; right:10px;"></div>
+<div class="page-shell centered-shell">
+    <header class="topbar topbar-home">
+        <div class="brand">
+            <div class="brand-icon">📚</div>
+            <div>
+                <h1>Biblioteca</h1>
+                <p class="subtitle">Sistema de gestión bibliotecaria</p>
+            </div>
+        </div>
+        <div id="login-area" class="login-area"></div>
+    </header>
 
-<h1>📚 Biblioteca</h1>
-<p>Bienvenido al sistema de gestión de biblioteca.</p>
+    <main class="hero-card">
+        <div class="hero-content">
+            <span class="hero-badge">Biblioteca API</span>
+            <h2>Gestiona libros, préstamos, reservas y valoraciones desde una interfaz simple.</h2>
+            <p>
+                Accede al sistema para entrar en tu panel correspondiente según tu rol.
+            </p>
+        </div>
+    </main>
+</div>
 
 <script src="app.js"></script>
 </body>
-
 </html>

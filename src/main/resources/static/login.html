@@ -2,26 +2,34 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - Biblioteca</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="auth-page">
 
-<h1>📚 Biblioteca</h1>
+<div class="auth-shell">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <div class="brand-icon large">📚</div>
+            <h1>Biblioteca</h1>
+            <p>Accede a tu cuenta</p>
+        </div>
 
-<section>
-    <h2>Iniciar sesión</h2>
+        <section class="auth-section">
+            <h2>Iniciar sesión</h2>
 
-    <form method="POST" action="/login">
-        <input type="text" name="username" placeholder="Usuario" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
+            <form method="POST" action="/login" class="auth-form">
+                <input type="text" name="username" placeholder="Usuario" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <button type="submit">Entrar</button>
+            </form>
 
-        <button type="submit">Entrar</button>
-    </form>
+            <p class="auth-link">¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+        </section>
+    </div>
+</div>
 
-    <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
-
-</section>
 <script src="app.js"></script>
 </body>
 </html>

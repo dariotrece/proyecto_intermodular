@@ -289,7 +289,7 @@ async function prestarLibro() {
 
 async function devolverLibro() {
     const isbn = document.getElementById("devolucionIsbn").value;
-    const usuarioIdInput = document.getElementById("devolucionUsuario").value().trim();
+    const usuarioIdInput = document.getElementById("devolucionUsuario").value.trim();
 
     if (!isbn || !usuarioIdInput) {
         alert("Introduce el ISBN y el ID del usuario");
@@ -685,5 +685,29 @@ async function cancelarReservaBibliotecario(id) {
         cargarTodasReservas();
     } else {
         alert("Error al cancelar la reserva");
+    }
+}
+
+async function cargarRecomendacion() {
+    const div = document.getElementById("recomendacion");
+    div.textContent = "Consultando con la IA...";
+    try {
+        const res = await fetch("/recomendaciones/mia");
+
+        if (res.status === 401) {
+            div.textContent = "No has iniciado sesión.";
+            window.location.href = "/login.html";
+            return;
+        }
+
+        if (!res.ok) {
+            div.textContent = "No se han podido cargar recomendaciones ahora mismo.";
+            return;
+        }
+
+        const data = await res.json();
+        div.textContent = data.recomendacion || "No se han encontrado recomendaciones para tu historial.";
+    } catch (error) {
+        div.textContent = "No se han podido cargar recomendaciones ahora mismo.";
     }
 }

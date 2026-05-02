@@ -1,89 +1,149 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Administrador</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="page-admin">
 
-<div id="login-area" style="position:absolute; top:10px; right:10px;"></div>
+<div class="page-shell">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">📚</div>
+            <div>
+                <h1>Biblioteca</h1>
+                <p class="subtitle">Panel de administración</p>
+            </div>
+        </div>
+        <div id="login-area" class="login-area"></div>
+    </header>
 
-<h1>📚 Biblioteca</h1>
+    <main class="dashboard-grid">
+        <section class="card">
+            <div class="card-header">
+                <h2>Crear libro</h2>
+                <p>Da de alta un nuevo libro en el sistema</p>
+            </div>
+            <div class="form-grid">
+                <input id="isbn" placeholder="ISBN">
+                <input id="titulo" placeholder="Título">
+                <input id="autor" placeholder="Autor">
+            </div>
+            <div class="actions">
+                <button onclick="crearLibro()">Guardar</button>
+            </div>
+        </section>
 
-<section>
-    <h2>Crear libro</h2>
-    <input id="isbn" placeholder="ISBN">
-    <input id="titulo" placeholder="Título">
-    <input id="autor" placeholder="Autor">
-    <button onclick="crearLibro()">Guardar</button>
-</section>
+        <section class="card">
+            <div class="card-header">
+                <h2>Buscar libro por ISBN</h2>
+                <p>Consulta un libro concreto por su identificador</p>
+            </div>
+            <div class="inline-form">
+                <input id="isbnLibro" placeholder="ISBN">
+                <button onclick="buscarLibroISBN()">Buscar</button>
+            </div>
+            <div id="resultadoBusqueda" class="result-box"></div>
+        </section>
 
+        <section class="card">
+            <div class="card-header">
+                <h2>Buscar libro por título</h2>
+                <p>Localiza coincidencias por nombre</p>
+            </div>
+            <div class="inline-form">
+                <input id="nombreLibro" placeholder="Título Libro">
+                <button onclick="buscarLibroTitulo()">Buscar</button>
+            </div>
+            <div id="resultadoBusquedaTitulo" class="result-box"></div>
+        </section>
 
-<section>
-    <h2>Buscar libro por ISBN</h2>
-    <input id="isbnLibro" placeholder="ISBN">
-    <button onclick="buscarLibroISBN()">Buscar</button>
-    <div id="resultadoBusqueda"></div>
-</section>
+        <section class="card">
+            <div class="card-header">
+                <h2>Prestar libro</h2>
+                <p>Asocia un libro a un usuario</p>
+            </div>
+            <div class="form-grid">
+                <input id="prestamoIsbn" placeholder="ISBN">
+                <input id="prestamoUsuario" placeholder="ID Usuario">
+            </div>
+            <div class="actions">
+                <button onclick="prestarLibro()">Prestar</button>
+            </div>
+        </section>
 
-<section>
-    <h2>Buscar libro por Título</h2>
-    <input id="nombreLibro" placeholder="Título Libro">
-    <button onclick="buscarLibroTitulo()">Buscar</button>
-    <div id="resultadoBusquedaTitulo"></div>
-</section>
+        <section class="card">
+            <div class="card-header">
+                <h2>Devolver libro</h2>
+                <p>Registra la devolución de un préstamo</p>
+            </div>
+            <div class="form-grid">
+                <input id="devolucionIsbn" placeholder="ISBN">
+                <input id="devolucionUsuario" placeholder="ID Usuario">
+            </div>
+            <div class="actions">
+                <button onclick="devolverLibro()">Devolver</button>
+            </div>
+        </section>
 
-<section>
-    <h2>Prestar libro</h2>
-    <input id="prestamoIsbn" placeholder="ISBN">
-    <input id="prestamoUsuario" placeholder="ID Usuario">
-    <button onclick="prestarLibro()">Prestar</button>
-</section>
+        <section class="card card-full">
+            <div class="card-header card-header-row">
+                <div>
+                    <h2>Libros en sistema</h2>
+                    <p>Listado completo de libros registrados</p>
+                </div>
+                <button onclick="listarLibros()">Actualizar lista</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ISBN</th>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Estado</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaLibros"></tbody>
+                </table>
+            </div>
+        </section>
 
-<section>
-    <h2>Devolver libro</h2>
-    <input id="devolucionIsbn" placeholder="ISBN">
-    <input id="devolucionUsuario" placeholder="ID Usuario">
-    <button onclick="devolverLibro()">Devolver</button>
-</section>
+        <section class="card">
+            <div class="card-header card-header-row">
+                <div>
+                    <h2>Usuarios en sistema</h2>
+                    <p>Usuarios disponibles para préstamos y gestión</p>
+                </div>
+                <button onclick="listarUsuarios()">Actualizar lista</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaUsuarios"></tbody>
+                </table>
+            </div>
+        </section>
 
-<section>
-    <h2>Libros en sistema</h2>
-    <button onclick="listarLibros()">Actualizar lista</button>
-    <table>
-        <thead>
-        <tr>
-            <th>ISBN</th>
-            <th>Título</th>
-            <th>Autor</th>
-            <th>Estado</th>
-        </tr>
-        </thead>
-        <tbody id="tablaLibros"></tbody>
-    </table>
-</section>
-
-<section>
-    <h2>Usuarios en sistema</h2>
-    <button onclick="listarUsuarios()">Actualizar lista</button>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-        </tr>
-        </thead>
-        <tbody id="tablaUsuarios"></tbody>
-    </table>
-</section>
-
-<section>
-    <h2>Gestión de reservas</h2>
-    <button onclick="cargarTodasReservas()">Ver todas las reservas</button>
-    <div id="todasReservas"></div>
-</section>
+        <section class="card">
+            <div class="card-header card-header-row">
+                <div>
+                    <h2>Gestión de reservas</h2>
+                    <p>Consulta y administra las reservas activas</p>
+                </div>
+                <button onclick="cargarTodasReservas()">Ver todas las reservas</button>
+            </div>
+            <div id="todasReservas" class="result-box"></div>
+        </section>
+    </main>
+</div>
 
 <script src="app.js"></script>
 </body>

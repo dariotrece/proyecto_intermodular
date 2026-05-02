@@ -11,15 +11,24 @@ public class BibliotecaApiApplication {
 		try {
 			Dotenv dotenv = Dotenv.load();
 
-			System.setProperty("DB_URL", dotenv.get("DB_URL"));
-			System.setProperty("DB_USER", dotenv.get("DB_USER"));
-			System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
-			System.setProperty("JWT_SECRET", dotenv.get("JWT_SECRET"));
+			setSystemPropertyIfPresent(dotenv, "DB_URL");
+			setSystemPropertyIfPresent(dotenv, "DB_USER");
+			setSystemPropertyIfPresent(dotenv, "DB_PASSWORD");
+			setSystemPropertyIfPresent(dotenv, "JWT_SECRET");
+			setSystemPropertyIfPresent(dotenv, "OPEN_ROUTER_KEY");
+			setSystemPropertyIfPresent(dotenv, "OPENROUTER_MODEL");
 		} catch (Exception e) {
 
 		}
 
 		SpringApplication.run(BibliotecaApiApplication.class, args);
+	}
+
+	private static void setSystemPropertyIfPresent(Dotenv dotenv, String key) {
+		String value = dotenv.get(key);
+		if (value != null && !value.isBlank()) {
+			System.setProperty(key, value);
+		}
 	}
 
 }

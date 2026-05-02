@@ -1,86 +1,148 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Usuario</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
-<body>
-<h1>Panel Usuario</h1>
+<body class="page-user">
 
-<section>
-    <h2>Buscar libro por Título</h2>
-    <input id="nombreLibro" placeholder="Título Libro">
-    <button onclick="buscarLibroTitulo()">Buscar</button>
-    <div id="resultadoBusquedaTitulo"></div>
-</section>
+<div class="page-shell">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">📚</div>
+            <div>
+                <h1>Biblioteca</h1>
+                <p class="subtitle">Panel de usuario</p>
+            </div>
+        </div>
+        <div id="login-area" class="login-area"></div>
+    </header>
 
-<section>
-    <h2>Valorar libro</h2>
+    <main class="dashboard-grid">
+        <section class="card">
+            <div class="card-header">
+                <h2>Buscar libro por título</h2>
+                <p>Encuentra libros disponibles o prestados</p>
+            </div>
+            <div class="inline-form">
+                <input id="nombreLibro" placeholder="Título Libro">
+                <button onclick="buscarLibroTitulo()">Buscar</button>
+            </div>
+            <div id="resultadoBusquedaTitulo" class="result-box"></div>
+        </section>
 
-    <input id="tituloValoracion" placeholder="Título del libro">
+        <section class="card">
+            <div class="card-header">
+                <h2>Valorar libro</h2>
+                <p>Deja tu puntuación y comentario</p>
+            </div>
 
-    <select id="puntuacion">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
+            <div class="form-grid">
+                <input id="tituloValoracion" placeholder="Título del libro">
 
-    <select id="origenLibro">
-        <option value="BIBLIOTECA">Biblioteca</option>
-        <option value="PRIVADO">Libro propio</option>
-    </select>
+                <select id="puntuacion">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
 
-    <textarea id="comentario"></textarea>
+                <select id="origenLibro">
+                    <option value="BIBLIOTECA">Biblioteca</option>
+                    <option value="PRIVADO">Libro propio</option>
+                </select>
 
-    <button onclick="crearValoracion()">Valorar</button>
+                <textarea id="comentario" placeholder="Escribe un comentario"></textarea>
+            </div>
 
-</section>
+            <div class="actions">
+                <button onclick="crearValoracion()">Valorar</button>
+            </div>
+        </section>
 
-<section>
-    <h2>Mis valoraciones</h2>
-    <div id="listaValoraciones"></div>
-    <button onclick="cargarValoraciones()">Carga tus valoraciones haciendo click</button>
-</section>
+        <section class="card">
+            <div class="card-header card-header-row">
+                <div>
+                    <h2>Mis valoraciones</h2>
+                    <p>Consulta y elimina tus valoraciones</p>
+                </div>
+                <button onclick="cargarValoraciones()">Cargar valoraciones</button>
+            </div>
+            <div id="listaValoraciones" class="result-box"></div>
+        </section>
 
-<section>
-    <h2>Mis préstamos</h2>
-    <div style="display:flex; gap:8px; align-items:center;">
-        <button onclick="cargarMisPrestamos(false)">Ver todos</button>
-        <button onclick="cargarMisPrestamos(true)">Solo activos</button>
-    </div>
-    <div id="misPrestamos"></div>
-</section>
+        <section class="card">
+            <div class="card-header">
+                <h2>Mis préstamos</h2>
+                <p>Consulta tu historial y préstamos activos</p>
+            </div>
+            <div class="actions actions-row">
+                <button onclick="cargarMisPrestamos(false)">Ver todos</button>
+                <button onclick="cargarMisPrestamos(true)">Solo activos</button>
+            </div>
+            <div id="misPrestamos" class="result-box"></div>
+        </section>
 
-<section>
-    <h2>Buscar valoraciones de otros usuarios</h2>
-    <input id="usernameInput" placeholder="Nombre de usuario">
-    <button onclick="buscarUsuario()">Buscar</button>
-    <div id="valoracionesOtroUsuario"></div>
-</section>
+        <section class="card">
+            <div class="card-header">
+                <h2>Buscar valoraciones de otros usuarios</h2>
+                <p>Consulta opiniones publicadas por otro usuario</p>
+            </div>
+            <div class="inline-form">
+                <input id="usernameInput" placeholder="Nombre de usuario">
+                <button onclick="buscarUsuario()">Buscar</button>
+            </div>
+            <div id="valoracionesOtroUsuario" class="result-box"></div>
+        </section>
 
-<section>
-    <h2>Libros mejor valorados</h2>
-    <button onclick="cargarRanking()">Ver ranking</button>
-    <div id="ranking"></div>
-</section>
+        <section class="card">
+            <div class="card-header card-header-row">
+                <div>
+                    <h2>Libros mejor valorados</h2>
+                    <p>Ranking general de títulos</p>
+                </div>
+                <button onclick="cargarRanking()">Ver ranking</button>
+            </div>
+            <div id="ranking" class="result-box"></div>
+        </section>
 
-<section>
-    <h2>Reservar libro</h2>
-    <input id="reservaTitulo" placeholder="Título del libro">
-    <button onclick="crearReserva()">Reservar</button>
-</section>
+        <section class="card">
+            <div class="card-header">
+                <h2>Reservar libro</h2>
+                <p>Solicita un libro por su título</p>
+            </div>
+            <div class="inline-form">
+                <input id="reservaTitulo" placeholder="Título del libro">
+                <button onclick="crearReserva()">Reservar</button>
+            </div>
+        </section>
 
-<section>
-    <h2>Mis reservas</h2>
-    <button onclick="cargarMisReservas()">Ver mis reservas</button>
-    <div id="misReservas"></div>
-</section>
+        <section class="card">
+            <div class="card-header card-header-row">
+                <div>
+                    <h2>Mis reservas</h2>
+                    <p>Visualiza el estado de tus reservas</p>
+                </div>
+                <button onclick="cargarMisReservas()">Ver mis reservas</button>
+            </div>
+            <div id="misReservas" class="result-box"></div>
+        </section>
 
+        <section class="card card-full">
+            <div class="card-header card-header-row">
+                <div>
+                    <h2>Recomendaciones para ti</h2>
+                    <p>Sugerencias generadas a partir de tus intereses</p>
+                </div>
+                <button onclick="cargarRecomendacion()">Ver mis recomendaciones</button>
+            </div>
+            <div id="recomendacion" class="result-box recomendacion-box"></div>
+        </section>
+    </main>
+</div>
 
 <script src="app.js"></script>
 </body>
