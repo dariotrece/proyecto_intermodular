@@ -111,7 +111,7 @@ El sistema utiliza **PostgreSQL** como base de datos relacional. El archivo `dat
 DB_URL=jdbc:postgresql://db:5432/BibliotecaDB
 DB_USER=postgres
 DB_PASSWORD=tu_password
-GEMINI_API_KEY=tu_clave_gemini
+OPENROUTER_API_KEY=tu_clave_openrouter
 ```
 
 2. Levantar el proyecto:
